@@ -251,21 +251,25 @@ func TestParsingInfixExpression(t *testing.T) {
 		if !ok {
 			t.Fatalf("program.Statement[0] is not an ast.ExpressionStatement. got=%T", program.Statements[0])
 		}
-		exp, ok := stmt.Expression.(*ast.InfixExpression)
-		if !ok {
-			t.Fatalf("exp is not an ast.InfixExpression. got=%T", stmt.Expression)
-		}
-		if !testIntegerLiteral(t, exp.Left, tt.leftValue) {
+
+		if !testInfixExpression(t, stmt.Expression, tt.leftValue, tt.operator, tt.rightValue) {
 			return
 		}
+		//exp, ok := stmt.Expression.(*ast.InfixExpression)
+		//if !ok {
+		//	t.Fatalf("exp is not an ast.InfixExpression. got=%T", stmt.Expression)
+		//}
+		//if !testIntegerLiteral(t, exp.Left, tt.leftValue) {
+		//	return
+		//}
 
-		if exp.Operator != tt.operator {
-			t.Fatalf("exp.Operator is not %s, got=%s", tt.operator, exp.Operator)
-		}
+		//if exp.Operator != tt.operator {
+		//	t.Fatalf("exp.Operator is not %s, got=%s", tt.operator, exp.Operator)
+		//}
 
-		if !testIntegerLiteral(t, exp.Right, tt.rightValue) {
-			return
-		}
+		//if !testIntegerLiteral(t, exp.Right, tt.rightValue) {
+		//	return
+		//}
 	}
 }
 
