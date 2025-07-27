@@ -189,16 +189,16 @@ func (be *BooleanExpression) expressionNode()      {}
 func (be *BooleanExpression) TokenLiteral() string { return be.Token.Literal }
 func (be *BooleanExpression) String() string       { return be.Token.Literal }
 
-type ifExpression struct {
+type IfExpression struct {
 	Token       token.Token // The "if" token
 	Condition   Expression
 	Consequence *BlockStatement
 	Alternative *BlockStatement
 }
 
-func (ie *ifExpression) expressionNode()      {}
-func (ie *ifExpression) TokenLiteral() string { return ie.Token.Literal }
-func (ie *ifExpression) String() string {
+func (ie *IfExpression) expressionNode()      {}
+func (ie *IfExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IfExpression) String() string {
 	var out bytes.Buffer
 
 	out.WriteString("if")
