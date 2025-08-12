@@ -1,3 +1,4 @@
 ./interpreter
 interpreter
-./tmp/main
+tmp/*
+./tmp/*
