@@ -1,6 +1,8 @@
 package evaluator
 
 import (
+	"fmt"
+
 	"github.com/xPoppa/interpreter/ast"
 	"github.com/xPoppa/interpreter/object"
 )
@@ -95,8 +97,12 @@ func evalInfixExpression(operator string,
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
 		return nativeBoolToBooleanObject(left != right)
+	case left.Type() != right.Type():
+		return newError("type mismatch: %s %s %s",
+			left.Type(), operator, right.Type())
 	default:
-		return NULL
+		return newError("unknown operator: %s %s %s",
+			left.Type(), operator, right.Type())
 	}
 }
 
@@ -124,7 +130,8 @@ func evalIntegerInfixExpression(operator string,
 	case "!=":
 		return nativeBoolToBooleanObject(leftVal.Value != rightVal.Value)
 	default:
-		return NULL
+		return newError("unknown operator: %s %s %s",
+			left.Type(), operator, right.Type())
 	}
 }
 
@@ -135,7 +142,7 @@ func evalPrefixExpression(operator string, obj object.Object) object.Object {
 	case "-":
 		return evalMinusPrefixOperatorExpression(obj)
 	default:
-		return NULL
+		return newError("unknown operator; %s %s", operator, obj.Type())
 	}
 }
 
@@ -154,7 +161,7 @@ func evalBangOperator(obj object.Object) object.Object {
 
 func evalMinusPrefixOperatorExpression(obj object.Object) object.Object {
 	if obj.Type() != object.INTEGER_OBJ {
-		return NULL
+		return newError("unknown operator: -%s", obj.Type())
 	}
 
 	value := obj.(*object.Integer).Value
@@ -179,4 +186,8 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 		return TRUE
 	}
 	return FALSE
+}
+
+func newError(format string, a ...any) *object.Error {
+	return &object.Error{Message: fmt.Sprintf(format, a...)}
 }
