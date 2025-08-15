@@ -2,3 +2,4 @@
 interpreter
 tmp/*
 ./tmp/*
+./tmp/build-errors.log
