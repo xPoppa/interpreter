@@ -54,6 +54,11 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		// How to call a function here?
 		// Evaluate the arguments to a function
 		args := evalExpressions(node.Arguments, env)
+		if len(args) == 1 && isError(args[0]) {
+			return args[0]
+		}
+
+		return applyFunction(function, args)
 
 		if len(args) == 1 && isError(args[0]) {
 			return args[0]
@@ -303,11 +308,10 @@ func extendFunctionEnv(
 	return env
 }
 
+// I don't understand why I have to unwrap it
 func unwrapReturnValue(obj object.Object) object.Object {
-
 	if returnValue, ok := obj.(*object.ReturnValue); ok {
 		return returnValue.Value
 	}
-
 	return obj
 }
