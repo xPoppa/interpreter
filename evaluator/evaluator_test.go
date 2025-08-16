@@ -317,6 +317,7 @@ func TestFunctionApplication(t *testing.T) {
 		testIntegerObject(t, testEval(tt.input), tt.expected)
 	}
 }
+
 func TestClosures(t *testing.T) {
 	input := `
 let newAdder = fn(x) {
