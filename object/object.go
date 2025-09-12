@@ -94,7 +94,7 @@ func (i *String) Inspect() string  { return fmt.Sprintf("%s", i.Value) }
 func (i *String) Type() ObjectType { return STRING_OBJ }
 
 type Builtin struct {
-	fn BuiltinFunction
+	Fn BuiltinFunction
 }
 
 func (b *Builtin) Type() ObjectType { return BUILTIN_OBJ }
