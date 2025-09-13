@@ -287,3 +287,24 @@ type StringLiteral struct {
 func (str *StringLiteral) expressionNode()      {}
 func (str *StringLiteral) TokenLiteral() string { return str.Token.Literal }
 func (str *StringLiteral) String() string       { return str.Token.Literal }
+
+type ArrayLiteral struct {
+	Token    token.Token // the '[' token
+	Elements []Expression
+}
+
+func (arr *ArrayLiteral) expressionNode()      {}
+func (arr *ArrayLiteral) TokenLiteral() string { return arr.Token.Literal }
+func (arr *ArrayLiteral) String() string {
+	var out bytes.Buffer
+
+	elems := []string{}
+	for _, elem := range arr.Elements {
+		elems = append(elems, elem.String())
+	}
+	out.WriteString(arr.TokenLiteral())
+	out.WriteString(strings.Join(elems, ", "))
+	out.WriteString("]")
+
+	return out.String()
+}
