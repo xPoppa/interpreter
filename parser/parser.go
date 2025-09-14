@@ -185,7 +185,9 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 
 		p.nextToken()
 
-		leftExp = infix(leftExp) // the expression parsed as left expression put it in and parse a right side of a expression
+		leftExp = infix(
+			leftExp,
+		) // the expression parsed as left expression put it in and parse a right side of a expression
 
 	}
 
@@ -239,7 +241,10 @@ func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
 }
 
 func (p *Parser) parseBoolean() ast.Expression {
-	return &ast.BooleanExpression{Token: p.curToken, Value: p.curTokenIs(token.TRUE)}
+	return &ast.BooleanExpression{
+		Token: p.curToken,
+		Value: p.curTokenIs(token.TRUE),
+	}
 }
 
 func (p *Parser) parseGroupedExpression() ast.Expression {

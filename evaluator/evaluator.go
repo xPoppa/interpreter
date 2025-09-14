@@ -111,7 +111,10 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 	return nil
 }
 
-func evalIfExpression(ie *ast.IfExpression, env *object.Environment) object.Object {
+func evalIfExpression(
+	ie *ast.IfExpression,
+	env *object.Environment,
+) object.Object {
 	condition := Eval(ie.Condition, env)
 
 	if isError(condition) {
@@ -144,7 +147,10 @@ func evalProgram(stmts []ast.Statement, env *object.Environment) object.Object {
 	return result
 }
 
-func evalBlockStatements(block *ast.BlockStatement, env *object.Environment) object.Object {
+func evalBlockStatements(
+	block *ast.BlockStatement,
+	env *object.Environment,
+) object.Object {
 	var result object.Object
 
 	for _, stmt := range block.Statements {
@@ -211,7 +217,10 @@ func evalIntegerInfixExpression(operator string,
 	}
 }
 
-func evalStringInfixExpression(operator string, left, right object.Object) object.Object {
+func evalStringInfixExpression(
+	operator string,
+	left, right object.Object,
+) object.Object {
 	leftVal := left.(*object.String)
 	rightVal := right.(*object.String)
 

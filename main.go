@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/xPoppa/interpreter/repl"
 	"os"
 	"os/user"
+
+	"github.com/xPoppa/interpreter/repl"
 )
 
 func main() {

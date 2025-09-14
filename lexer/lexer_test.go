@@ -1,8 +1,9 @@
 package lexer
 
 import (
-	"github.com/xPoppa/interpreter/token"
 	"testing"
+
+	"github.com/xPoppa/interpreter/token"
 )
 
 func TestNextToken(t *testing.T) {
