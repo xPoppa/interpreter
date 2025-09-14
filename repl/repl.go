@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"os"
 
 	"github.com/xPoppa/interpreter/evaluator"
 	"github.com/xPoppa/interpreter/lexer"
@@ -24,6 +25,9 @@ func Start(in io.Reader, out io.Writer) {
 			return
 		}
 		line := scanner.Text()
+		if line == "exit" {
+			os.Exit(0)
+		}
 		l := lexer.New(line)
 		p := parser.New(l)
 
