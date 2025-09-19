@@ -5,3 +5,4 @@ tmp/*
 ./tmp/build-errors.log
 cmd/test
 miauw
+marker
