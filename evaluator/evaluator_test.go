@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/xPoppa/interpreter/lexer"
@@ -253,6 +254,15 @@ func TestErrorHandling(t *testing.T) {
 		{
 			`"Hello" - "World"`,
 			"unknown operator: STRING - STRING",
+		},
+		{
+			`{"name": "Monkey"}[fn(x) { x }];`,
+			fmt.Sprintf("%s, is not allowed as key of a hashmap use %s, %s or %s",
+				object.FUNCTION_OBJ,
+				object.BOOLEAN_OBJ,
+				object.INTEGER_OBJ,
+				object.STRING_OBJ,
+			),
 		},
 	}
 	for _, tt := range tests {
@@ -549,6 +559,56 @@ func TestHashLiterals(t *testing.T) {
 		}
 		if !testIntegerObject(t, exp.Value, v) {
 			t.Errorf("expected value is not correct, got=%d, want=%d", exp.Value, v)
+		}
+	}
+}
+
+func TestHashIndexExpression(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected any
+	}{
+		{
+			`{"foo": 5}["foo"]`,
+			5,
+		},
+		{
+			`{"foo": 5}["bar"]`,
+			nil,
+		},
+		{
+			`let key = "foo"; {"foo": 5}[key]`,
+			5,
+		},
+		{
+			`{}["foo"]`,
+			nil,
+		},
+		{
+			`{5: 5}[5]`,
+			5,
+		},
+		{
+			`{true: 5}[true]`,
+			5,
+		},
+		{
+			`{false: 5}[false]`,
+			5,
+		},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+		integer, ok := tt.expected.(int)
+		if ok {
+			if !testIntegerObject(t, evaluated, int64(integer)) {
+				//t.Errorf("input is not an integer, got=%s", evaluated.Type())
+			}
+		} else {
+			if !testNullObject(t, evaluated) {
+				//t.Errorf("Expected null but got=%s", evaluated.Type())
+			}
 		}
 	}
 }

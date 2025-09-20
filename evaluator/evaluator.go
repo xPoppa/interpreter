@@ -108,8 +108,9 @@ func Eval(node ast.Node, env *object.Environment) object.Object {
 		return &object.Array{Elements: elements}
 
 	case *ast.HashLiteral:
-
-		return evalHashLiteral(node, env)
+		// This goes correct
+		hash := evalHashLiteral(node, env)
+		return hash
 
 	}
 
@@ -376,6 +377,8 @@ func evalIndexExpression(left, index object.Object) object.Object {
 	switch {
 	case left.Type() == object.ARRAY_OBJ && index.Type() == object.INTEGER_OBJ:
 		return evalArrayIndexExpression(left, index)
+	case left.Type() == object.HASH_OBJ:
+		return evalHashIndexExpression(left, index)
 	default:
 		return newError("index operator not supported: %s", left.Type())
 	}
@@ -393,10 +396,28 @@ func evalArrayIndexExpression(array, index object.Object) object.Object {
 	return arrayObject.Elements[idx]
 }
 
+func evalHashIndexExpression(hash, index object.Object) object.Object {
+
+	hashObj := hash.(*object.Hash)
+	key, ok := index.(object.Hashable)
+	if !ok {
+		return newError("%s, is not allowed as key of a hashmap use %s, %s or %s",
+			index.Type(),
+			object.BOOLEAN_OBJ,
+			object.INTEGER_OBJ,
+			object.STRING_OBJ)
+	}
+
+	pair, ok := hashObj.Pairs[key.HashKey()]
+	if !ok {
+		return NULL
+	}
+	return pair.Value
+}
+
 func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Object {
 
-	hashObj := &object.Hash{Pairs: make(map[object.HashKey]object.HashPair, len(node.Pairs))}
-
+	pairs := make(map[object.HashKey]object.HashPair, len(node.Pairs))
 	for k, v := range node.Pairs {
 
 		evaluatedKey := Eval(k, env)
@@ -419,8 +440,8 @@ func evalHashLiteral(node *ast.HashLiteral, env *object.Environment) object.Obje
 		}
 
 		hashed := hashKey.HashKey()
-		hashObj.Pairs[hashed] = object.HashPair{Key: evaluatedKey, Value: value}
+		pairs[hashed] = object.HashPair{Key: evaluatedKey, Value: value}
 
 	}
-	return hashObj
+	return &object.Hash{Pairs: pairs}
 }
